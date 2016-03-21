@@ -1,0 +1,30 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "description": "Simple todo list using mongoose and express",
+  "main": "server.js",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "forever": "^0.15.1",
+    "request": "^2.69.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EasonWang01/Mongo-express-TODO.git"
+  },
+  "author": "yicheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EasonWang01/Mongo-express-TODO/issues"
+  },
+  "homepage": "https://github.com/EasonWang01/Mongo-express-TODO#readme"
+}
