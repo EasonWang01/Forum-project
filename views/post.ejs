@@ -31,7 +31,7 @@ var comment = $("#comment").val();
     url:'/postArticle',
     data:{標題:cap,內容:comment},
     success:function(result){
-      if(result=="請先登入")alert(result)
+      if(result=="請先登入"){alert(result)};
         read();//article.ejs更新文章列表
     },
     

@@ -14,21 +14,25 @@
 <script>
 //讀取文章後傳入article.ejs
 var read = function(){
+ress={};
 var xhttp = new XMLHttpRequest();
 xhttp.open('POST', '/articleData');
 xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 xhttp.onreadystatechange = function() {
 if (xhttp.readyState == 4 && xhttp.status == 200) {
-  console.log(xhttp.responseText);
-  ress = JSON.parse(xhttp.responseText);
+  console.log(xhttp.responseText); 
+ ress = JSON.parse(xhttp.responseText);
+ 
   
 }}
 xhttp.send();
-};
+}; 
 
+read();
 
-function articleFragment() {document.getElementById('post').innerHTML =  new EJS({url:'article.ejs'}).render({res:ress});
-
+function articleFragment() {
+  document.getElementById('post').innerHTML =  new EJS({url:'article.ejs'}).render({res:ress});
+//在div內的script不會執行，所以手動讓他執行
 MyDiv = document.getElementById('post')
 var arr = MyDiv.getElementsByTagName('script')
 for (var n = 0; n < arr.length; n++)
@@ -37,6 +41,7 @@ for (var n = 0; n < arr.length; n++)
 };
 
 function postFragment() {document.getElementById('post').innerHTML =  new EJS({url:'post.ejs'}).render();
+//在div內的script不會執行，所以手動讓他執行
 MyDiv = document.getElementById('post')
 var arr = MyDiv.getElementsByTagName('script')
 for (var n = 0; n < arr.length; n++)
@@ -54,8 +59,7 @@ $(document).ready(function(){
 $("#signout").hide();
 $("#user").hide();
 
-//在div內的script不會執行，所以手動讓他執行
-
+read();
 
 
 });
@@ -106,7 +110,7 @@ function onSignIn(googleUser) {
     <ul class="nav navbar-nav">
       <li ><a href="#">Home</a></li>
       <li><a onclick="postFragment()">發表文章</a></li>
-      <li><a onclick="articleFragment();read();">顯示文章</a></li>
+      <li><a onclick="articleFragment();">顯示文章</a></li>
       <li><a href="#">Page 3</a></li>
 
     </ul>

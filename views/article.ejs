@@ -1,9 +1,32 @@
 
+<style>
+#articleContent{
+	font-size: 30px
+}
+</style>
 
+<script>
+//將server render的ejs data轉為var
+b =  <%= JSON.stringify(res)%> ;
 
-<script> </script>
+document.querySelectorAll(".abc").forEach(function(a){
+	a.addEventListener('click',function(){
+	console.log(this.id);
+	document.getElementById('articleContent').innerHTML = b[this.id].content
+})});
+</script>
 <ul>
 <% for(var i=0; i<res.length; i++) {%>
-   <li><%=res[i].title %></li>
+   <li id=<%= i %> class="abc" > <%=res[i].title %></li>
 <% } %>
 </ul>
+
+
+
+<div style=" border-style: dotted solid;width:30%;height:35%;position:fixed;top:30%;left:30%;overflow: scroll;">
+<div>
+   <p  id="articleContent"> </p>
+
+</div>
+
+</div>
