@@ -1,31 +1,20 @@
 var express = require("express");
 var app = express();
 var bodyParser = require('body-parser'),
+	cookieParser = require('cookie-parser'),
     request = require('request');
 
-var session = require('express-session');
-var flash = require('connect-flash');
-
+var mongo = require('./mongo.js')
 app.set('view engine', 'ejs');
 
-
-var mongoose = require("mongoose");
-mongoose.connect('mongodb://forclass1:test123@ds013898.mlab.com:13898/forclass',function(err){
-	if(err){throw err};
-});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("connect mongo")
-});
+app.use(express.static('scripts'));
+app.use(express.static('views'));
+mongo.connect();
 
 var isLogin = false;
+var getToken ;
+/////;
 
-/////
-var account = mongoose.model('account', {
-  account: String,
-  password: String
-});
 
 /*var kitty = new Cat({ name: 'Zildjian', time:'12:00'});
 
@@ -39,12 +28,7 @@ kitty.save(function (err) {
 //-----
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}));
+
 
 app.get("/",function(req,res){
 
@@ -52,16 +36,19 @@ res.render('land');
 });
 
 app.post("/signin",function(req,res){
-console.log(req.body);
+//console.log(req.body );
 
 request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+req.body.idtoken, function (error, response, body) {
   if (!error && response.statusCode == 200) {
-    console.log(body) // Show the HTML for the Google homepage. 
+  	//console.log(JSON.parse(body).name)
+  	//console.log(JSON.parse(body).email)
+  	mongo.userSign(JSON.parse(body).name,JSON.parse(body).email)
+    _name=JSON.parse(body).name//為了讓mongo.post知道username
      isLogin = true;
 		  }
 		});
-
 });
+
 app.post("/signOut",function(req,res){
 isLogin = false;
 });
@@ -69,14 +56,19 @@ isLogin = false;
 
 app.post("/postArticle",function(req,res){
 	if(isLogin){
-		console.log("謝謝~");//存入文章
+		console.log(req.session)
+		mongo.post(_name,req.body.標題,req.body.內容);
+		
 	}else{
 		res.send("請先登入");
 	};
 
 	res.end();
 });
-
+app.post("/articleData",function(req,res){
+	
+	mongo.find(res);	
+});
 /*
 app.post("/roll",function(req,res){
 
@@ -89,7 +81,7 @@ app.post("/roll",function(req,res){
 	res.redirect('/read')
 	res.end();
 });
-
+ 
 
 app.post("/updatelist",function(req,res){
 	
@@ -126,55 +118,11 @@ app.get("/read",function(req,res){
 
 });
 */
-app.get("/signup",function(req,res){
 
-	res.render("signup");
-
-});
 app.get("/login",function(req,res){
-
-	res.render("login");
-
-});
-
-app.post("/signup",function(req,res){
-	console.log(req.body.account);
-	var a = new account({ account:req.body.account,password:req.body.password});
-
-	a.save(function (err) {
-	  if (err) // ...
-	  console.log('save err');
-	});
-	res.redirect('/')
-	res.end();
+//console.log(getToken)
 
 });
-app.post("/login",function(req,res){
-	console.log(req.body.account);
-	console.log(req.body.password);
-/*
-	var find = account.find({account:req.body.account},{password:1,_id:0},function(err,doc){
-		try{
-			if(doc[0].password==req.body.password){
-				console.log("true");
-				app.use(function(req, res, next){
-				req.flash("info", "登入成功");
-				next();
-				});
-			}else{
-				console.log("false");
-			};
-		}catch(e){
-			console.log(e);
-		};
-		
-	});
-	//res.redirect('/');
-*/	res.send(req.body);
-	res.end();
-	
-});
-
 
 app.listen("3000",function(){
 	console.log("listening  3000");

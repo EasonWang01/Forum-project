@@ -1,21 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>發表文章</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-</head>
-<body>
+
 
 <div class="container">
   <h2>發表文章</h2>
   
     <div class="form-group">
        <label for="cap">標題</label>
-      <input type="password" class="form-control" id="cap"name="標題">
+      <input  class="form-control" id="cap"name="標題">
 
       <label for="comment">內容</label>
       <textarea class="form-control" rows="5" id="comment"name="內容"></textarea>
@@ -30,16 +20,20 @@
 
 <script>
 
-
+console.log(13)
 //ajax登入
 $("#submit01").click(function(){
+
 var cap = $("#cap").val();
 var comment = $("#comment").val();
   $.ajax({
     type: 'POST',
     url:'/postArticle',
     data:{標題:cap,內容:comment},
-    success:function(result){if(result=="請先登入")alert(result)},
+    success:function(result){
+      if(result=="請先登入")alert(result)
+        read();//article.ejs更新文章列表
+    },
     
 
 
@@ -47,5 +41,3 @@ var comment = $("#comment").val();
 });
 </script>
 
-</body>
-</html>

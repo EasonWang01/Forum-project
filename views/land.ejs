@@ -9,12 +9,55 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  </script>
+<script src="ejs.js"></script>
+
+<script>
+//讀取文章後傳入article.ejs
+var read = function(){
+var xhttp = new XMLHttpRequest();
+xhttp.open('POST', '/articleData');
+xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhttp.onreadystatechange = function() {
+if (xhttp.readyState == 4 && xhttp.status == 200) {
+  console.log(xhttp.responseText);
+  ress = JSON.parse(xhttp.responseText);
+  
+}}
+xhttp.send();
+};
+
+
+function articleFragment() {document.getElementById('post').innerHTML =  new EJS({url:'article.ejs'}).render({res:ress});
+
+MyDiv = document.getElementById('post')
+var arr = MyDiv.getElementsByTagName('script')
+for (var n = 0; n < arr.length; n++)
+    eval(arr[n].innerHTML)
+
+};
+
+function postFragment() {document.getElementById('post').innerHTML =  new EJS({url:'post.ejs'}).render();
+MyDiv = document.getElementById('post')
+var arr = MyDiv.getElementsByTagName('script')
+for (var n = 0; n < arr.length; n++)
+    eval(arr[n].innerHTML)
+
+};
+</script>
+
   <script>
+
+
+
+
 $(document).ready(function(){
 $("#signout").hide();
 $("#user").hide();
-$('#post').hide();
+
+//在div內的script不會執行，所以手動讓他執行
+
+
+
 });
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -25,7 +68,7 @@ function onSignIn(googleUser) {
   console.log('Email: ' + profile.getEmail());
    var id_token = googleUser.getAuthResponse().id_token;
    console.log(id_token);
-
+   getToken = (function(i){return  i})(id_token)//讓idtoken只可讀，不可改
    $("#userimg").attr("src",imgUrl);
    $("#signinblock").hide();
    $("#signout"). show();
@@ -37,7 +80,7 @@ function onSignIn(googleUser) {
     xhr.onload = function() {
       console.log('Signed in as: ' + xhr.responseText);
     };
-    xhr.send('idtoken=' + id_token);
+    xhr.send('idtoken=' + id_token);//google回傳的id_token會隨時間改變(定時更改)
 };
  function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
@@ -62,17 +105,15 @@ function onSignIn(googleUser) {
     </div>
     <ul class="nav navbar-nav">
       <li ><a href="#">Home</a></li>
-      <li><a href="javascript:$('#post').toggle();">發表文章</a></li>
-      <li><a href="#">Page 2</a></li>
+      <li><a onclick="postFragment()">發表文章</a></li>
+      <li><a onclick="articleFragment();read();">顯示文章</a></li>
       <li><a href="#">Page 3</a></li>
 
     </ul>
 
-   
-
 
     <ul class="nav navbar-nav navbar-right">
-   <li id="user"><img style="height:50px" id="userimg"></img></li>
+  <li id="user"><img style="height:50px" id="userimg"></img></li>
     
 
          <div id="signinblock">
@@ -91,7 +132,8 @@ function onSignIn(googleUser) {
 </nav>
   
 <div id="post" class="container">
-<% include post %>
+
+  
 </div>
 
 <script>
